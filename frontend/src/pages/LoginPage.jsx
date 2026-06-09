@@ -34,11 +34,22 @@ function LoginPage() {
 
   return (
     <main className="auth-page">
+      <section className="auth-intro" aria-label="Giới thiệu hệ thống">
+        <span className="eyebrow">EZ Inventory</span>
+        <h1>Kiểm soát kho hàng trong một màn hình rõ ràng.</h1>
+        <p>Quản lý sản phẩm, tồn kho, nhà cung cấp và danh mục bằng giao diện gọn cho ca vận hành hằng ngày.</p>
+        <div className="auth-proof">
+          <span>REST API</span>
+          <span>JWT</span>
+          <span>PostgreSQL</span>
+        </div>
+      </section>
+
       <form className="form-panel" onSubmit={handleSubmit}>
         <div className="auth-heading">
-          <span className="eyebrow">Quản lý kho</span>
-          <h1>Đăng nhập</h1>
-          <p>Quản lý sản phẩm, tồn kho, nhà cung cấp và danh mục.</p>
+          <span className="eyebrow">Đăng nhập</span>
+          <h2>Vào bảng điều khiển</h2>
+          <p>Dùng tài khoản quản trị để truy cập dữ liệu kho.</p>
         </div>
 
         <label>
