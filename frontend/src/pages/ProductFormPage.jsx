@@ -117,102 +117,130 @@ function ProductFormPage() {
 
   return (
     <main className="page">
-      <div className="page-header">
+      <div className="page-header product-form-header">
         <div>
           <span className="eyebrow">Thông tin sản phẩm</span>
           <h1>{isEdit ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h1>
-          <p>{isEdit ? 'Cập nhật chi tiết sản phẩm.' : 'Tạo một sản phẩm mới.'}</p>
+          <p>{isEdit ? 'Cập nhật mã hàng, nguồn cung và số lượng.' : 'Nhập thông tin hàng hóa mới để đưa vào kho.'}</p>
         </div>
       </div>
 
       {error && <p className="error panel-error">{error}</p>}
 
-      <form className="form-grid" onSubmit={handleSubmit}>
-        <label>
-          Tên sản phẩm
-          <input name="name" value={form.name} onChange={handleChange} required />
-        </label>
+      <form className="form-grid product-form" onSubmit={handleSubmit}>
+        <section className="form-section form-section--identity">
+          <div className="section-heading">
+            <span>01</span>
+            <h2>Thông tin chính</h2>
+          </div>
 
-        <label>
-          SKU
-          <input name="sku" value={form.sku} onChange={handleChange} required />
-        </label>
+          <label className="field-span-6">
+            Tên sản phẩm
+            <input name="name" value={form.name} onChange={handleChange} required />
+          </label>
 
-        <label>
-          Danh mục
-          <select name="category" value={form.category} onChange={handleChange}>
-            <option value="">Chưa chọn danh mục</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <label className="field-span-6">
+            SKU
+            <input name="sku" value={form.sku} onChange={handleChange} required />
+          </label>
+        </section>
 
-        <label>
-          Nhà cung cấp
-          <select name="supplier" value={form.supplier} onChange={handleChange}>
-            <option value="">Chưa chọn nhà cung cấp</option>
-            {suppliers.map((supplier) => (
-              <option key={supplier.id} value={supplier.id}>
-                {supplier.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <section className="form-section">
+          <div className="section-heading">
+            <span>02</span>
+            <h2>Phân loại và nguồn cung</h2>
+          </div>
 
-        <label>
-          Đơn vị
-          <select name="unit" value={form.unit} onChange={handleChange}>
-            {units.map((unit) => (
-              <option key={unit} value={unit}>
-                {unitLabels[unit]}
-              </option>
-            ))}
-          </select>
-        </label>
+          <label className="field-span-6">
+            Danh mục
+            <select name="category" value={form.category} onChange={handleChange}>
+              <option value="">Chưa chọn danh mục</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <label>
-          Giá
-          <input
-            name="price"
-            type="number"
-            min="0"
-            value={form.price}
-            onChange={handleChange}
-            required
-          />
-        </label>
+          <label className="field-span-6">
+            Nhà cung cấp
+            <select name="supplier" value={form.supplier} onChange={handleChange}>
+              <option value="">Chưa chọn nhà cung cấp</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </section>
 
-        <label>
-          Số lượng
-          <input
-            name="quantity"
-            type="number"
-            min="0"
-            value={form.quantity}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <section className="form-section">
+          <div className="section-heading">
+            <span>03</span>
+            <h2>Tồn kho và giá</h2>
+          </div>
 
-        <label className="form-grid__full">
-          Mô tả
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            rows="4"
-          />
-        </label>
+          <label className="field-span-4">
+            Đơn vị
+            <select name="unit" value={form.unit} onChange={handleChange}>
+              {units.map((unit) => (
+                <option key={unit} value={unit}>
+                  {unitLabels[unit]}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="field-span-4">
+            Giá
+            <input
+              name="price"
+              type="number"
+              min="0"
+              value={form.price}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label className="field-span-4">
+            Số lượng
+            <input
+              name="quantity"
+              type="number"
+              min="0"
+              value={form.quantity}
+              onChange={handleChange}
+              required
+            />
+          </label>
+        </section>
+
+        <section className="form-section form-section--description">
+          <div className="section-heading">
+            <span>04</span>
+            <h2>Mô tả</h2>
+          </div>
+
+          <label className="field-span-12">
+            Ghi chú mô tả
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              rows="3"
+            />
+          </label>
+        </section>
 
         <div className="form-actions">
           <button type="button" onClick={() => navigate('/products')}>
             Hủy
           </button>
           <button type="submit" disabled={loading}>
-            {loading ? 'Đang lưu...' : 'Lưu'}
+            {loading ? 'Đang lưu...' : 'Lưu sản phẩm'}
           </button>
         </div>
       </form>
