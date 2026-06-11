@@ -203,7 +203,8 @@ function LoginPage() {
     setNotice('Vui lòng liên hệ quản trị viên để đặt lại mật khẩu.')
   }
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = (event) => {
+    event?.preventDefault()
     setError('')
     setNotice('Tài khoản mới cần được quản trị viên phê duyệt trước khi sử dụng.')
   }
@@ -216,8 +217,7 @@ function LoginPage() {
 
       <form className="auth-card" onSubmit={handleSubmit}>
         <div className="auth-heading">
-          <span className="auth-kicker">Đăng nhập</span>
-          <h2>Vào bảng điều khiển</h2>
+          <h2>Đăng nhập</h2>
           <p>Dùng tài khoản quản trị để truy cập dữ liệu kho.</p>
         </div>
 
@@ -259,12 +259,12 @@ function LoginPage() {
           </button>
         </div>
 
-        <div className="auth-create">
-          <span>Chưa có tài khoản?</span>
-          <button className="auth-create-button" type="button" onClick={handleCreateAccount}>
+        <p className="auth-create">
+          Chưa có tài khoản?{' '}
+          <a className="auth-create-link" href="#create-account" onClick={handleCreateAccount}>
             Tạo tài khoản mới
-          </button>
-        </div>
+          </a>
+        </p>
       </form>
     </main>
   )
