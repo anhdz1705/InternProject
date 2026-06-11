@@ -3469,3 +3469,318 @@ textarea:focus {
     display: grid;
   }
 }
+
+/* Auth and logout polish refresh */
+.auth-page {
+  grid-template-columns: minmax(420px, 1.08fr) minmax(360px, 430px);
+  gap: clamp(42px, 6vw, 88px);
+  background:
+    radial-gradient(circle at 18% 20%, rgb(52 211 153 / 0.16), transparent 30%),
+    radial-gradient(circle at 78% 78%, rgb(36 99 235 / 0.09), transparent 34%),
+    linear-gradient(135deg, #fbfcf9 0%, #f4f8f3 48%, #edf5f1 100%);
+  padding: clamp(36px, 6vw, 76px);
+}
+
+.auth-page::before {
+  opacity: 0.76;
+  background-image:
+    linear-gradient(rgb(8 127 91 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(8 127 91 / 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(115deg, black 0%, rgb(0 0 0 / 0.7) 54%, transparent 86%);
+}
+
+.auth-page::after {
+  opacity: 0.64;
+  background:
+    linear-gradient(122deg, transparent 0 60%, rgb(8 127 91 / 0.075) 60% 60.25%, transparent 60.25%),
+    linear-gradient(34deg, transparent 0 66%, rgb(36 99 235 / 0.05) 66% 66.22%, transparent 66.22%),
+    linear-gradient(92deg, transparent 0 77%, rgb(16 24 40 / 0.045) 77% 77.2%, transparent 77.2%);
+}
+
+.auth-visual-panel {
+  min-height: min(72vh, 660px);
+  align-self: center;
+}
+
+.warehouse-illustration {
+  width: min(100%, 760px);
+  max-height: 680px;
+  filter:
+    drop-shadow(0 26px 42px rgb(16 35 29 / 0.13))
+    drop-shadow(0 0 26px rgb(52 211 153 / 0.1));
+}
+
+.warehouse-illustration::before {
+  opacity: 0.9;
+}
+
+.warehouse-illustration::after {
+  border-color: rgb(53 212 255 / 0.2);
+}
+
+.auth-card {
+  gap: 20px;
+  align-self: center;
+  border: 1px solid rgb(255 255 255 / 0.86);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(250 253 250 / 0.9));
+  box-shadow:
+    0 24px 64px rgb(16 24 40 / 0.14),
+    0 8px 22px rgb(8 127 91 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.95);
+  padding: 32px;
+}
+
+.auth-card::before {
+  opacity: 0.7;
+  background:
+    linear-gradient(135deg, rgb(8 127 91 / 0.07) 0 19%, transparent 19.2%),
+    linear-gradient(315deg, rgb(36 99 235 / 0.04) 0 15%, transparent 15.2%);
+}
+
+.auth-heading {
+  gap: 9px;
+}
+
+.auth-kicker {
+  min-height: 32px;
+  border-color: rgb(8 127 91 / 0.18);
+  background: #edf9f3;
+  color: #087f5b;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 7px 11px;
+}
+
+.auth-heading h2 {
+  color: #101f1a;
+  font-size: clamp(26px, 2.5vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.auth-heading p {
+  color: #66746f;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.auth-fields {
+  gap: 14px;
+}
+
+.auth-field {
+  gap: 7px;
+  color: #253b34;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.auth-input-shell input {
+  min-height: 50px;
+  border-color: #d8e2dd;
+  border-radius: 12px;
+  background: #fff;
+  color: #10231d;
+  padding-left: 46px;
+  box-shadow: 0 1px 0 rgb(16 24 40 / 0.02);
+}
+
+.auth-input-shell input:hover {
+  border-color: #bdd2ca;
+}
+
+.auth-input-shell input:focus {
+  border-color: #087f5b;
+  box-shadow:
+    0 0 0 4px rgb(8 127 91 / 0.11),
+    0 10px 22px rgb(16 24 40 / 0.06);
+}
+
+.auth-input-icon {
+  left: 14px;
+  color: #7b8c85;
+}
+
+.auth-page .auth-submit {
+  min-height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #087f5b, #065f46);
+  box-shadow: 0 14px 28px rgb(6 95 70 / 0.25);
+}
+
+.auth-page .auth-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #066a4c, #064e3b);
+  box-shadow: 0 18px 34px rgb(6 95 70 / 0.28);
+}
+
+.auth-page .auth-text-action {
+  color: #087f5b;
+  text-underline-offset: 4px;
+}
+
+.auth-create {
+  gap: 10px;
+  border-top-color: rgb(16 24 40 / 0.08);
+  padding-top: 18px;
+}
+
+.auth-page .auth-create-button {
+  min-height: 46px;
+  border-color: #cfdad5;
+  border-radius: 12px;
+  background: #fff;
+  color: #173d32;
+}
+
+.auth-page .auth-create-button:hover {
+  border-color: #087f5b;
+  background: #f1fbf7;
+}
+
+.logout-confirm {
+  background:
+    radial-gradient(circle at 50% 42%, rgb(8 127 91 / 0.18), transparent 28%),
+    rgb(15 23 42 / 0.58);
+  padding: 24px;
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+
+.logout-confirm__dialog {
+  grid-template-columns: auto minmax(0, 1fr);
+  width: min(456px, 100%);
+  gap: 14px 16px;
+  border-radius: 20px;
+  border-color: rgb(255 255 255 / 0.84);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(248 250 252 / 0.96));
+  box-shadow:
+    0 28px 80px rgb(15 23 42 / 0.3),
+    0 0 0 1px rgb(255 255 255 / 0.42) inset;
+  padding: 24px;
+}
+
+.logout-confirm__icon {
+  width: 52px;
+  height: 52px;
+  border-color: rgb(185 28 28 / 0.16);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, #fff7ed, #fef2f2);
+  color: #b42318;
+}
+
+.logout-confirm__copy {
+  align-self: center;
+}
+
+.logout-confirm__copy h2 {
+  color: #101828;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.logout-confirm__copy p {
+  max-width: 34ch;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.logout-confirm__actions {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.logout-confirm__actions button {
+  min-height: 44px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.logout-confirm__cancel {
+  border-color: #d0d5dd;
+  background: #fff;
+  color: #344054;
+}
+
+.logout-confirm__cancel:hover {
+  background: #f8fafc;
+  color: #101828;
+}
+
+.logout-confirm__confirm {
+  border-color: #b42318;
+  background: #b42318;
+  color: #fff;
+}
+
+.logout-confirm__confirm:hover {
+  border-color: #912018;
+  background: #912018;
+}
+
+@media (max-width: 1100px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 34px 20px;
+  }
+
+  .auth-visual-panel {
+    width: min(100%, 540px);
+    min-height: auto;
+  }
+
+  .warehouse-illustration {
+    width: min(100%, 540px);
+  }
+
+  .auth-card {
+    width: min(100%, 460px);
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-page {
+    gap: 20px;
+    padding: 22px 14px;
+  }
+
+  .auth-visual-panel {
+    width: min(100%, 360px);
+  }
+
+  .warehouse-illustration {
+    width: min(100%, 360px);
+  }
+
+  .auth-card {
+    gap: 18px;
+    border-radius: 18px;
+    padding: 22px;
+  }
+
+  .logout-confirm {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .logout-confirm__dialog {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 14px;
+    border-radius: 18px;
+    padding: 20px;
+  }
+
+  .logout-confirm__actions {
+    grid-template-columns: 1fr;
+  }
+}
