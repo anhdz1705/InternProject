@@ -12,8 +12,9 @@ function ProductTable({ products, onDelete }) {
   if (!products.length) {
     return (
       <div className="empty-state">
+        <span>Không có dữ liệu</span>
         <strong>Không tìm thấy sản phẩm</strong>
-        <p>Hãy thử từ khóa khác hoặc bỏ bớt bộ lọc để xem thêm dữ liệu kho.</p>
+        <p>Thử từ khóa khác hoặc bỏ bớt bộ lọc để xem thêm dữ liệu kho.</p>
       </div>
     )
   }
@@ -22,6 +23,12 @@ function ProductTable({ products, onDelete }) {
     if (quantity === 0) return 'stock-badge stock-badge--danger'
     if (quantity <= 10) return 'stock-badge stock-badge--warning'
     return 'stock-badge stock-badge--ok'
+  }
+
+  const getStockLabel = (quantity) => {
+    if (quantity === 0) return 'Hết hàng'
+    if (quantity <= 10) return 'Sắp hết'
+    return 'Ổn định'
   }
 
   return (
@@ -42,8 +49,12 @@ function ProductTable({ products, onDelete }) {
         <tbody>
           {products.map((product) => (
             <tr key={product.id}>
-              <td>{product.name}</td>
-              <td>{product.sku}</td>
+              <td>
+                <strong className="product-name">{product.name}</strong>
+              </td>
+              <td>
+                <code>{product.sku}</code>
+              </td>
               <td>{product.category_name || '-'}</td>
               <td>{product.supplier_name || '-'}</td>
               <td>
@@ -51,10 +62,11 @@ function ProductTable({ products, onDelete }) {
                   {unitLabels[product.unit] || product.unit}
                 </span>
               </td>
-              <td>{Number(product.price).toLocaleString('vi-VN')} VND</td>
+              <td className="numeric-cell">{Number(product.price).toLocaleString('vi-VN')} VND</td>
               <td>
                 <span className={getStockClass(product.quantity)}>
-                  {product.quantity}
+                  <strong>{product.quantity}</strong>
+                  <small>{getStockLabel(product.quantity)}</small>
                 </span>
               </td>
               <td>

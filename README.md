@@ -1,14 +1,14 @@
 # EZ Inventory
 
-Hệ thống quản lý kho giúp theo dõi sản phẩm, danh mục, nhà cung cấp và thống kê dữ liệu tồn kho cơ bản.
+EZ Inventory là hệ thống quản lý kho giúp theo dõi sản phẩm, danh mục, nhà cung cấp và dữ liệu tồn kho. Dự án gồm frontend React/Vite và backend Django REST Framework, dùng JWT để xác thực người dùng.
 
-## 📌 Demo
+## Demo
 
 - Frontend: `http://localhost:5173`
-- Backend: `http://localhost:8000`
-- Admin Django: `http://localhost:8000/admin/`
+- Backend API: `http://localhost:8000/api`
+- Django Admin: `http://localhost:8000/admin/`
 
-## 🚀 Công nghệ sử dụng
+## Công nghệ sử dụng
 
 ### Frontend
 
@@ -17,6 +17,7 @@ Hệ thống quản lý kho giúp theo dõi sản phẩm, danh mục, nhà cung 
 - Axios
 - React Router
 - CSS thuần
+- Font giao diện: Be Vietnam Pro, Roboto Mono
 
 ### Backend
 
@@ -27,16 +28,11 @@ Hệ thống quản lý kho giúp theo dõi sản phẩm, danh mục, nhà cung 
 - Django Filter
 - CORS Headers
 
-### Database
+### Database và DevOps
 
 - PostgreSQL
-
-### DevOps
-
 - Docker
 - Docker Compose
-
-## ✨ Chức năng
 
 ### Authentication
 
@@ -70,9 +66,8 @@ Hệ thống quản lý kho giúp theo dõi sản phẩm, danh mục, nhà cung 
 - Tổng số sản phẩm
 - Tổng số danh mục
 - Tổng số nhà cung cấp
-- Giao diện tổng quan dữ liệu kho
-
-## 📂 Cấu trúc thư mục
+- Một số chỉ số tổng hợp
+## Cấu trúc thư mục
 
 ```txt
 InternProject/
@@ -84,6 +79,7 @@ InternProject/
 │   └── seed_data.py
 ├── frontend/
 │   ├── public/
+│   │   └── favicon.svg
 │   ├── src/
 │   │   ├── api/
 │   │   ├── components/
@@ -91,13 +87,14 @@ InternProject/
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
+│   ├── index.html
 │   └── package.json
 ├── docs/
 ├── docker-compose.yml
 └── README.md
 ```
 
-## ⚙️ Cài đặt
+## Cài đặt
 
 ### Clone project
 
@@ -163,7 +160,7 @@ Frontend chạy tại:
 http://localhost:5173
 ```
 
-## 🐳 Chạy bằng Docker
+## Chạy bằng Docker
 
 Hiện tại Docker Compose đang cấu hình PostgreSQL:
 
@@ -173,9 +170,9 @@ docker compose up -d
 
 Sau đó chạy backend và frontend bằng lệnh ở phần cài đặt.
 
-## 🔑 Biến môi trường
+## Biến môi trường
 
-Backend `.env`
+Backend `.env`:
 
 ```env
 DB_NAME=inventory_db
@@ -195,27 +192,27 @@ frontend/src/api/axiosClient.js
 baseURL: 'http://localhost:8000/api'
 ```
 
-## 👥 Thành viên
+## Thành viên
 
 | Họ tên | Vai trò |
-|----------|----------|
+| --- | --- |
 | Thái Hữu Long Vũ | Backend |
 | Lê Minh Hoài Thương | Frontend |
 | Lê Ngọc Ánh | CI, tài liệu, tích hợp, demo |
 
-## 📋 API
+## API
 
 ### Authentication
 
 | Method | Endpoint | Chức năng |
-|----------|----------|----------|
+| --- | --- | --- |
 | POST | `/api/auth/login/` | Đăng nhập |
 | POST | `/api/auth/refresh/` | Làm mới access token |
 
 ### Products
 
 | Method | Endpoint | Chức năng |
-|----------|----------|----------|
+| --- | --- | --- |
 | GET | `/api/products/` | Danh sách sản phẩm |
 | POST | `/api/products/` | Thêm sản phẩm |
 | GET | `/api/products/:id/` | Chi tiết sản phẩm |
@@ -226,7 +223,7 @@ baseURL: 'http://localhost:8000/api'
 Query hỗ trợ:
 
 | Query | Ví dụ | Chức năng |
-|----------|----------|----------|
+| --- | --- | --- |
 | `page` | `/api/products/?page=1` | Phân trang |
 | `search` | `/api/products/?search=laptop` | Tìm theo tên hoặc SKU |
 | `category` | `/api/products/?category=1` | Lọc theo danh mục |
@@ -237,7 +234,7 @@ Query hỗ trợ:
 ### Categories
 
 | Method | Endpoint | Chức năng |
-|----------|----------|----------|
+| --- | --- | --- |
 | GET | `/api/categories/` | Danh sách danh mục |
 | POST | `/api/categories/` | Thêm danh mục |
 | GET | `/api/categories/:id/` | Chi tiết danh mục |
@@ -248,7 +245,7 @@ Query hỗ trợ:
 ### Suppliers
 
 | Method | Endpoint | Chức năng |
-|----------|----------|----------|
+| --- | --- | --- |
 | GET | `/api/suppliers/` | Danh sách nhà cung cấp |
 | POST | `/api/suppliers/` | Thêm nhà cung cấp |
 | GET | `/api/suppliers/:id/` | Chi tiết nhà cung cấp |
@@ -256,7 +253,7 @@ Query hỗ trợ:
 | PATCH | `/api/suppliers/:id/` | Cập nhật một phần |
 | DELETE | `/api/suppliers/:id/` | Xóa nhà cung cấp |
 
-## ✅ Kiểm tra
+## Kiểm tra
 
 ### Frontend
 
@@ -266,7 +263,7 @@ npm run lint
 npm run build
 ```
 
-Nếu dùng PowerShell và bị chặn `npm`:
+Nếu dùng PowerShell và bị chặn `npm`, dùng:
 
 ```bash
 npm.cmd run lint
@@ -281,6 +278,6 @@ python manage.py check
 python manage.py test
 ```
 
-## 📄 License
+## License
 
 MIT License

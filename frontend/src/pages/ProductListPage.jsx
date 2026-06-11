@@ -88,55 +88,72 @@ function ProductListPage() {
         <div>
           <span className="eyebrow">Kho hàng</span>
           <h1>Sản phẩm</h1>
-          <p>Tìm kiếm, lọc, thêm, sửa và xóa thông tin sản phẩm.</p>
+          <p>Tìm kiếm, lọc, thêm, sửa và xóa thông tin sản phẩm trong kho.</p>
         </div>
         <Link className="button-link" to="/products/new">
           Thêm sản phẩm
         </Link>
       </div>
 
-      <section className="filters panel">
-        <input
-          name="search"
-          value={filters.search}
-          onChange={handleFilterChange}
-          placeholder="Tìm theo tên hoặc SKU"
-        />
+      <section className="filters panel" aria-label="Bộ lọc sản phẩm">
+        <div className="filter-summary">
+          <span>Đang hiển thị</span>
+          <strong>{count} sản phẩm</strong>
+        </div>
 
-        <select
-          name="category"
-          value={filters.category}
-          onChange={handleFilterChange}
-        >
-          <option value="">Tất cả danh mục</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+        <label className="filter-field filter-field--search">
+          Tìm kiếm
+          <input
+            name="search"
+            value={filters.search}
+            onChange={handleFilterChange}
+            placeholder="Tên sản phẩm hoặc SKU"
+          />
+        </label>
 
-        <select
-          name="supplier"
-          value={filters.supplier}
-          onChange={handleFilterChange}
-        >
-          <option value="">Tất cả nhà cung cấp</option>
-          {suppliers.map((supplier) => (
-            <option key={supplier.id} value={supplier.id}>
-              {supplier.name}
-            </option>
-          ))}
-        </select>
+        <label className="filter-field">
+          Danh mục
+          <select
+            name="category"
+            value={filters.category}
+            onChange={handleFilterChange}
+          >
+            <option value="">Tất cả danh mục</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
 
-        <select name="unit" value={filters.unit} onChange={handleFilterChange}>
-          <option value="">Tất cả đơn vị</option>
-          {units.map((unit) => (
-            <option key={unit} value={unit}>
-              {unitLabels[unit]}
-            </option>
-          ))}
-        </select>
+        <label className="filter-field">
+          Nhà cung cấp
+          <select
+            name="supplier"
+            value={filters.supplier}
+            onChange={handleFilterChange}
+          >
+            <option value="">Tất cả nhà cung cấp</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier.id} value={supplier.id}>
+                {supplier.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="filter-field">
+          Đơn vị
+          <select name="unit" value={filters.unit} onChange={handleFilterChange}>
+            <option value="">Tất cả đơn vị</option>
+            {units.map((unit) => (
+              <option key={unit} value={unit}>
+                {unitLabels[unit]}
+              </option>
+            ))}
+          </select>
+        </label>
       </section>
 
       {error && <p className="error panel-error">{error}</p>}
