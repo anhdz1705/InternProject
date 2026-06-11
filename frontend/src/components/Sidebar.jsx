@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 const icons = {
@@ -9,6 +9,7 @@ const icons = {
   history: <><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5m4-1v5l3 2" /></>,
   logout: <><path d="M10 17l5-5-5-5m5 5H3" /><path d="M14 4h6v16h-6" /></>,
   menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
+  shield: <><path d="M12 3 5 6v5c0 4.3 2.9 8.3 7 10 4.1-1.7 7-5.7 7-10V6l-7-3Z" /><path d="M12 8v5" /><path d="M12 17h.01" /></>,
 }
 
 function Icon({ name }) {
@@ -30,10 +31,31 @@ const navigation = [
 function Sidebar() {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
 
-  const handleLogout = () => {
+  useEffect(() => {
+    if (!isLogoutConfirmOpen) return undefined
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsLogoutConfirmOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isLogoutConfirmOpen])
+
+  const requestLogout = () => {
+    setIsOpen(false)
+    setIsLogoutConfirmOpen(true)
+  }
+
+  const confirmLogout = () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    setIsLogoutConfirmOpen(false)
     navigate('/login')
   }
 
@@ -73,7 +95,7 @@ function Sidebar() {
             <span>WA</span>
             <div><strong>Warehouse Admin</strong><small>Đang hoạt động</small></div>
           </div>
-          <button type="button" onClick={handleLogout}>
+          <button type="button" onClick={requestLogout}>
             <Icon name="logout" />
             Đăng xuất
           </button>
@@ -87,6 +109,37 @@ function Sidebar() {
           aria-label="Đóng menu"
           onClick={() => setIsOpen(false)}
         />
+      )}
+
+      {isLogoutConfirmOpen && (
+        <div className="logout-confirm" role="presentation" onMouseDown={() => setIsLogoutConfirmOpen(false)}>
+          <section
+            className="logout-confirm__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-confirm-title"
+            aria-describedby="logout-confirm-description"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <span className="logout-confirm__icon">
+              <Icon name="shield" />
+            </span>
+            <div className="logout-confirm__copy">
+              <h2 id="logout-confirm-title">Xác nhận đăng xuất</h2>
+              <p id="logout-confirm-description">
+                Bạn sẽ rời khỏi phiên làm việc hiện tại và cần đăng nhập lại để tiếp tục quản lý kho.
+              </p>
+            </div>
+            <div className="logout-confirm__actions">
+              <button className="logout-confirm__cancel" type="button" onClick={() => setIsLogoutConfirmOpen(false)} autoFocus>
+                Hủy
+              </button>
+              <button className="logout-confirm__confirm" type="button" onClick={confirmLogout}>
+                Đăng xuất
+              </button>
+            </div>
+          </section>
+        </div>
       )}
     </>
   )
