@@ -15,7 +15,6 @@ const emptyProduct = {
   supplier: '',
   unit: 'piece',
   price: '',
-  quantity: '',
   description: '',
 }
 
@@ -42,8 +41,8 @@ function ProductFormPage() {
     const loadOptions = async () => {
       try {
         const [categoriesData, suppliersData] = await Promise.all([
-          getCategories(),
-          getSuppliers(),
+          getCategories({ all: 'true' }),
+          getSuppliers({ all: 'true' }),
         ])
 
         setCategories(categoriesData.results ?? categoriesData)
@@ -69,7 +68,6 @@ function ProductFormPage() {
           supplier: data.supplier ?? '',
           unit: data.unit ?? 'piece',
           price: data.price ?? '',
-          quantity: data.quantity ?? '',
           description: data.description ?? '',
         })
       } catch {
@@ -97,7 +95,6 @@ function ProductFormPage() {
       category: form.category || null,
       supplier: form.supplier || null,
       price: Number(form.price),
-      quantity: Number(form.quantity),
     }
 
     try {
@@ -121,7 +118,7 @@ function ProductFormPage() {
         <div>
           <span className="eyebrow">Thông tin sản phẩm</span>
           <h1>{isEdit ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h1>
-          <p>{isEdit ? 'Cập nhật mã hàng, nguồn cung và số lượng.' : 'Nhập thông tin hàng hóa mới để đưa vào kho.'}</p>
+          <p>{isEdit ? 'Cập nhật thông tin hàng hóa. Số lượng được quản lý bằng phiếu kho.' : 'Tạo hàng hóa mới với tồn kho ban đầu bằng 0.'}</p>
         </div>
       </div>
 
@@ -179,10 +176,10 @@ function ProductFormPage() {
         <section className="form-section">
           <div className="section-heading">
             <span>03</span>
-            <h2>Tồn kho và giá</h2>
+            <h2>Đơn vị và giá</h2>
           </div>
 
-          <label className="field-span-4">
+          <label className="field-span-6">
             Đơn vị
             <select name="unit" value={form.unit} onChange={handleChange}>
               {units.map((unit) => (
@@ -193,7 +190,7 @@ function ProductFormPage() {
             </select>
           </label>
 
-          <label className="field-span-4">
+          <label className="field-span-6">
             Giá
             <input
               name="price"
@@ -205,17 +202,6 @@ function ProductFormPage() {
             />
           </label>
 
-          <label className="field-span-4">
-            Số lượng
-            <input
-              name="quantity"
-              type="number"
-              min="0"
-              value={form.quantity}
-              onChange={handleChange}
-              required
-            />
-          </label>
         </section>
 
         <section className="form-section form-section--description">

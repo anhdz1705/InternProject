@@ -7,10 +7,11 @@ from decimal import Decimal
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
-from inventory.models import Category, Supplier, Product
+from inventory.models import Category, Product, StockDocument, Supplier
 
 def run():
     print("Xóa dữ liệu cũ...")
+    StockDocument.objects.all().delete()
     Product.objects.all().delete()
     Category.objects.all().delete()
     Supplier.objects.all().delete()

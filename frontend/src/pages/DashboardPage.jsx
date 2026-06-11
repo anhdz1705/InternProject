@@ -1,31 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getCategories } from '../api/categoryApi'
-import { getProducts } from '../api/productApi'
-import { getSuppliers } from '../api/supplierApi'
+import { getDashboardSummary } from '../api/dashboardApi'
 
 function DashboardPage() {
   const [stats, setStats] = useState({
     products: 0,
     categories: 0,
     suppliers: 0,
+    total_stock: 0,
+    low_stock: 0,
+    out_of_stock: 0,
+    stock_in_today: 0,
+    stock_out_today: 0,
+    recent_documents: [],
   })
   const [error, setError] = useState('')
 
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const [productsData, categoriesData, suppliersData] = await Promise.all([
-          getProducts(),
-          getCategories(),
-          getSuppliers(),
-        ])
-
-        setStats({
-          products: productsData.count ?? productsData.length ?? 0,
-          categories: categoriesData.count ?? categoriesData.length ?? 0,
-          suppliers: suppliersData.count ?? suppliersData.length ?? 0,
-        })
+        setStats(await getDashboardSummary())
       } catch {
         setError('Không tải được dữ liệu tổng quan. Vui lòng kiểm tra backend API.')
       }
@@ -34,19 +28,17 @@ function DashboardPage() {
     loadStats()
   }, [])
 
-  const totalRecords = stats.products + stats.categories + stats.suppliers
-  const catalogDensity = stats.categories
-    ? Math.max(1, Math.round(stats.products / stats.categories))
-    : stats.products
-  const supplierCoverage = stats.suppliers
-    ? Math.max(1, Math.round(stats.products / stats.suppliers))
-    : stats.products
-
   return (
     <main className="page">
       <div className="page-header page-header--simple">
         <div>
+          <span className="eyebrow">Trạng thái hôm nay</span>
           <h1>Tổng quan</h1>
+          <p>Theo dõi tồn kho và các giao dịch mới nhất trong một màn hình.</p>
+        </div>
+        <div className="page-header__actions">
+          <Link className="button-link button-link--secondary" to="/stock-out">Xuất kho</Link>
+          <Link className="button-link" to="/stock-in">Nhập kho</Link>
         </div>
       </div>
 
@@ -55,46 +47,69 @@ function DashboardPage() {
       <section className="dashboard-grid">
         <article className="metric-card metric-card--hero">
           <div>
-            <span>Sản phẩm đang quản lý</span>
-            <strong>{stats.products}</strong>
+            <span>Tổng lượng hàng tồn</span>
+            <strong>{stats.total_stock}</strong>
           </div>
-          <p>Mặt hàng hiện có trong hệ thống kho, sẵn sàng để lọc, cập nhật và đối soát.</p>
+          <p>Tổng số đơn vị sản phẩm đang có trong kho sau các giao dịch nhập và xuất.</p>
         </article>
         <article className="metric-card">
           <div>
-            <span>Danh mục</span>
-            <strong>{stats.categories}</strong>
+            <span>Nhập hôm nay</span>
+            <strong>+{stats.stock_in_today}</strong>
           </div>
-          <p>Nhóm phân loại giúp đội vận hành tìm đúng hàng nhanh hơn.</p>
+          <p>Số lượng đã được nhập vào kho trong ngày.</p>
         </article>
         <article className="metric-card">
           <div>
-            <span>Nhà cung cấp</span>
-            <strong>{stats.suppliers}</strong>
+            <span>Xuất hôm nay</span>
+            <strong>-{stats.stock_out_today}</strong>
           </div>
-          <p>Đối tác đang được gắn với dữ liệu sản phẩm trong kho.</p>
+          <p>Số lượng đã xuất khỏi kho trong ngày.</p>
         </article>
         <aside className="ops-panel">
-          <span className="eyebrow">Tín hiệu vận hành</span>
-          <h2>Dữ liệu kho đã sẵn sàng để kiểm tra theo ca.</h2>
+          <span className="eyebrow">Cảnh báo tồn kho</span>
+          <h2>Kiểm tra các mặt hàng cần bổ sung.</h2>
           <dl>
             <div>
-              <dt>Tổng bản ghi</dt>
-              <dd>{totalRecords}</dd>
+              <dt>Sản phẩm</dt>
+              <dd>{stats.products}</dd>
             </div>
             <div>
-              <dt>TB sản phẩm / danh mục</dt>
-              <dd>{catalogDensity}</dd>
+              <dt>Sắp hết hàng</dt>
+              <dd>{stats.low_stock}</dd>
             </div>
             <div>
-              <dt>TB sản phẩm / nhà cung cấp</dt>
-              <dd>{supplierCoverage}</dd>
+              <dt>Đã hết hàng</dt>
+              <dd>{stats.out_of_stock}</dd>
             </div>
           </dl>
-          <Link className="text-link" to="/products/new">
-            Tạo sản phẩm mới
-          </Link>
+          <Link className="text-link" to="/products">Kiểm tra danh sách sản phẩm</Link>
         </aside>
+      </section>
+
+      <section className="recent-documents">
+        <div className="section-title">
+          <div>
+            <span className="eyebrow">Dòng hoạt động</span>
+            <h2>Giao dịch gần nhất</h2>
+          </div>
+          <Link className="text-link" to="/stock-history">Xem toàn bộ lịch sử</Link>
+        </div>
+        <div className="recent-documents__list">
+          {stats.recent_documents.map((document) => (
+            <Link key={document.id} className="recent-document-card" to={`/stock-history/${document.id}`}>
+              <span className={`transaction-badge transaction-badge--${document.transaction_type.toLowerCase()}`}>
+                {document.transaction_type === 'IN' ? 'Nhập kho' : 'Xuất kho'}
+              </span>
+              <strong>{document.code}</strong>
+              <p>{document.supplier_name || document.recipient || 'Không có đối tác'}</p>
+              <small>{new Date(document.created_at).toLocaleString('vi-VN')}</small>
+            </Link>
+          ))}
+          {!stats.recent_documents.length && (
+            <div className="empty-state"><strong>Chưa có giao dịch kho</strong><p>Tạo phiếu nhập đầu tiên để bắt đầu theo dõi.</p></div>
+          )}
+        </div>
       </section>
     </main>
   )
