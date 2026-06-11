@@ -7,9 +7,10 @@
     "dev": "node scripts/dev-full.mjs",
     "dev:full": "node scripts/dev-full.mjs",
     "dev:backend": "node scripts/dev-backend.mjs",
-    "dev:frontend": "npm --prefix frontend run dev",
-    "setup": "npm --prefix frontend install",
-    "lint": "npm --prefix frontend run lint",
-    "build": "npm --prefix frontend run build"
+    "setup": "npm --prefix frontend install"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "react-chartjs-2": "^5.3.1"
   }
 }
