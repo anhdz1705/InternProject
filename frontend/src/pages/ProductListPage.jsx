@@ -7,6 +7,7 @@ import Pagination from '../components/Pagination'
 import ProductTable from '../components/ProductTable'
 
 const units = ['piece', 'box', 'kg', 'liter', 'pack']
+const pageSize = 10
 const unitLabels = {
   piece: 'Cái',
   box: 'Hộp',
@@ -54,8 +55,8 @@ function ProductListPage() {
   useEffect(() => {
     const loadFilterOptions = async () => {
       const [categoriesData, suppliersData] = await Promise.all([
-        getCategories(),
-        getSuppliers(),
+        getCategories({ all: 'true' }),
+        getSuppliers({ all: 'true' }),
       ])
 
       setCategories(categoriesData.results ?? categoriesData)
@@ -82,37 +83,50 @@ function ProductListPage() {
     await loadProducts()
   }
 
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      category: '',
+      supplier: '',
+      unit: '',
+      page: 1,
+    })
+  }
+
+  const hasFilters = filters.search || filters.category || filters.supplier || filters.unit
+
   return (
-    <main className="page">
-      <div className="page-header">
+    <main className="page product-management-page">
+      <div className="wms-breadcrumb">
+        <span>Quản lý kho</span><span>/</span><strong>Sản phẩm</strong>
+      </div>
+
+      <div className="page-header product-page-header">
         <div>
-          <span className="eyebrow">Kho hàng</span>
           <h1>Sản phẩm</h1>
-          <p>Tìm kiếm, lọc, thêm, sửa và xóa thông tin sản phẩm trong kho.</p>
+          <p>Quản lý danh mục hàng hóa và theo dõi trạng thái tồn kho.</p>
         </div>
-        <Link className="button-link" to="/products/new">
-          Thêm sản phẩm
+        <Link className="button-link product-add-button" to="/products/new">
+          <span>+</span> Thêm sản phẩm
         </Link>
       </div>
 
-      <section className="filters panel" aria-label="Bộ lọc sản phẩm">
-        <div className="filter-summary">
-          <span>Đang hiển thị</span>
-          <strong>{count} sản phẩm</strong>
-        </div>
-
-        <label className="filter-field filter-field--search">
-          Tìm kiếm
+      <section className="product-toolbar" aria-label="Bộ lọc sản phẩm">
+        <label className="product-search">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" />
+          </svg>
+          <span className="sr-only">Tìm kiếm</span>
           <input
             name="search"
             value={filters.search}
             onChange={handleFilterChange}
-            placeholder="Tên sản phẩm hoặc SKU"
+            placeholder="Tìm tên sản phẩm hoặc SKU..."
           />
         </label>
 
-        <label className="filter-field">
-          Danh mục
+        <label className="toolbar-filter">
+          <span className="sr-only">Danh mục</span>
           <select
             name="category"
             value={filters.category}
@@ -127,8 +141,8 @@ function ProductListPage() {
           </select>
         </label>
 
-        <label className="filter-field">
-          Nhà cung cấp
+        <label className="toolbar-filter">
+          <span className="sr-only">Nhà cung cấp</span>
           <select
             name="supplier"
             value={filters.supplier}
@@ -143,8 +157,8 @@ function ProductListPage() {
           </select>
         </label>
 
-        <label className="filter-field">
-          Đơn vị
+        <label className="toolbar-filter toolbar-filter--unit">
+          <span className="sr-only">Đơn vị</span>
           <select name="unit" value={filters.unit} onChange={handleFilterChange}>
             <option value="">Tất cả đơn vị</option>
             {units.map((unit) => (
@@ -154,26 +168,49 @@ function ProductListPage() {
             ))}
           </select>
         </label>
+
+        {hasFilters && (
+          <button className="clear-filters-button" type="button" onClick={clearFilters}>
+            Xóa bộ lọc
+          </button>
+        )}
       </section>
 
       {error && <p className="error panel-error">{error}</p>}
 
-      {loading ? (
-        <div className="table-skeleton">
-          <span />
-          <span />
-          <span />
-          <span />
+      <section className="product-grid-panel">
+        <div className="product-grid-meta">
+          <div>
+            <strong>Danh sách sản phẩm</strong>
+            <span>{count.toLocaleString('vi-VN')} sản phẩm trong hệ thống</span>
+          </div>
+          <span>Cập nhật theo dữ liệu tồn kho hiện tại</span>
         </div>
-      ) : (
-        <ProductTable products={products} onDelete={handleDelete} />
-      )}
 
-      <Pagination
-        currentPage={filters.page}
-        count={count}
-        onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
-      />
+        {loading ? (
+          <div className="table-skeleton">
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+        ) : (
+          <ProductTable
+            products={products}
+            onDelete={handleDelete}
+            currentPage={filters.page}
+            pageSize={pageSize}
+          />
+        )}
+
+        <Pagination
+          currentPage={filters.page}
+          count={count}
+          pageSize={pageSize}
+          itemLabel="sản phẩm"
+          onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
+        />
+      </section>
     </main>
   )
 }

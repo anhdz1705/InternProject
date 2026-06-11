@@ -47,9 +47,19 @@ EZ Inventory là hệ thống quản lý kho giúp theo dõi sản phẩm, danh 
 - Thêm sản phẩm
 - Sửa sản phẩm
 - Xóa sản phẩm
+- Quản lý số lượng tồn thông qua phiếu nhập/xuất
 - Tìm kiếm theo tên sản phẩm hoặc SKU
 - Lọc theo danh mục, nhà cung cấp, đơn vị tính
 - Phân trang
+
+### Stock Management
+
+- Tạo phiếu nhập kho gồm nhiều sản phẩm
+- Tạo phiếu xuất kho và tự động kiểm tra số lượng tồn
+- Cập nhật tồn kho an toàn trong database transaction
+- Lưu tồn kho trước và sau mỗi giao dịch
+- Giữ lịch sử tên và SKU khi sản phẩm bị xóa
+- Tìm kiếm, lọc và xem chi tiết lịch sử kho
 
 ### Category Management
 
@@ -63,10 +73,16 @@ EZ Inventory là hệ thống quản lý kho giúp theo dõi sản phẩm, danh 
 
 ### Dashboard
 
-- Tổng số sản phẩm
-- Tổng số danh mục
-- Tổng số nhà cung cấp
-- Một số chỉ số tổng hợp
+- Tổng số lượng hàng tồn
+- Số lượng nhập và xuất trong ngày
+- Sản phẩm sắp hết và đã hết hàng
+- Các giao dịch kho gần nhất
+
+### Giao diện
+
+- Trang đăng nhập độc lập
+- Sidebar quản trị bên trái
+- Sidebar thu gọn trên thiết bị di động
 ## Cấu trúc thư mục
 
 ```txt
@@ -95,6 +111,42 @@ InternProject/
 ```
 
 ## Cài đặt
+
+### Chạy toàn bộ dự án
+
+Sau khi đã cài Python dependencies và frontend dependencies, chạy tại thư mục gốc:
+
+```bash
+npm run dev
+```
+
+Lệnh sau cũng chạy được nếu bạn muốn viết theo dạng `dev full`:
+
+```bash
+npm run dev full
+```
+
+Hoặc dùng tên script đầy đủ:
+
+```bash
+npm run dev:full
+```
+
+Lệnh này sẽ tự động:
+
+- Khởi động PostgreSQL bằng Docker Compose
+- Chạy Django migrations
+- Chạy backend tại `http://localhost:8000`
+- Chạy frontend tại `http://localhost:5173`
+
+Nhấn `Ctrl+C` để dừng backend và frontend. PostgreSQL vẫn tiếp tục chạy để giữ dữ liệu.
+
+Các script development khác:
+
+```bash
+npm run dev:backend
+npm run dev:frontend
+```
 
 ### Clone project
 
@@ -253,6 +305,49 @@ Query hỗ trợ:
 | PATCH | `/api/suppliers/:id/` | Cập nhật một phần |
 | DELETE | `/api/suppliers/:id/` | Xóa nhà cung cấp |
 
+### Stock Documents
+
+| Method | Endpoint | Chức năng |
+| --- | --- | --- |
+| GET | `/api/stock-documents/` | Danh sách lịch sử nhập/xuất kho |
+| POST | `/api/stock-documents/` | Tạo phiếu nhập hoặc xuất kho |
+| GET | `/api/stock-documents/:id/` | Chi tiết phiếu kho |
+| GET | `/api/dashboard/` | Các chỉ số tổng quan kho |
+
+Phiếu kho sau khi tạo không thể sửa hoặc xóa qua API. Ví dụ tạo phiếu nhập:
+
+```json
+{
+  "transaction_type": "IN",
+  "supplier": 1,
+  "note": "Nhập bổ sung",
+  "lines": [
+    {
+      "product": 1,
+      "quantity": 10,
+      "unit_price": 500000
+    }
+  ]
+}
+```
+
+Ví dụ tạo phiếu xuất:
+
+```json
+{
+  "transaction_type": "OUT",
+  "recipient": "Phòng kỹ thuật",
+  "lines": [
+    {
+      "product": 1,
+      "quantity": 2
+    }
+  ]
+}
+```
+
+Query lịch sử hỗ trợ `search`, `transaction_type`, `date_from`, `date_to` và `page`.
+
 ## Kiểm tra
 
 ### Frontend
@@ -277,6 +372,8 @@ cd backend
 python manage.py check
 python manage.py test
 ```
+
+Bộ test backend kiểm tra các trường hợp nhập kho, xuất kho, xuất vượt tồn, rollback transaction, phiếu bất biến và lưu snapshot lịch sử.
 
 ## License
 
