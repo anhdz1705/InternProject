@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -156,6 +157,91 @@ class StockDocumentApiTests(APITestCase):
         self.assertEqual(response.data["products"], 1)
         self.assertEqual(response.data["total_stock"], 10)
         self.assertEqual(response.data["low_stock"], 1)
+
+    def test_reports_summary_returns_inventory_and_movement_data(self):
+        self.client.post(
+            "/api/stock-documents/",
+            {
+                "transaction_type": "IN",
+                "supplier": self.supplier.id,
+                "lines": [
+                    {
+                        "product": self.product.id,
+                        "quantity": 5,
+                        "unit_price": 450000,
+                    }
+                ],
+            },
+            format="json",
+        )
+        self.client.post(
+            "/api/stock-documents/",
+            {
+                "transaction_type": "OUT",
+                "recipient": "Phòng kỹ thuật",
+                "lines": [{"product": self.product.id, "quantity": 3}],
+            },
+            format="json",
+        )
+
+        today = timezone.localdate().isoformat()
+        response = self.client.get(
+            f"/api/reports/?date_from={today}&date_to={today}&period=day"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["inventory"]["total_stock"], 12)
+        self.assertEqual(response.data["movement"]["total_in"], 5)
+        self.assertEqual(response.data["movement"]["total_out"], 3)
+        self.assertEqual(response.data["movement"]["net_change"], 2)
+        self.assertEqual(response.data["top_products"]["stock_in"][0]["product_sku"], "KEY-001")
+        self.assertEqual(len(response.data["transactions"]), 2)
+
+    def test_reports_filter_by_transaction_type(self):
+        self.client.post(
+            "/api/stock-documents/",
+            {
+                "transaction_type": "IN",
+                "supplier": self.supplier.id,
+                "lines": [{"product": self.product.id, "quantity": 5}],
+            },
+            format="json",
+        )
+        self.client.post(
+            "/api/stock-documents/",
+            {
+                "transaction_type": "OUT",
+                "recipient": "Phòng kỹ thuật",
+                "lines": [{"product": self.product.id, "quantity": 2}],
+            },
+            format="json",
+        )
+
+        response = self.client.get("/api/reports/?transaction_type=OUT")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["movement"]["total_in"], 0)
+        self.assertEqual(response.data["movement"]["total_out"], 2)
+        self.assertEqual(response.data["transactions"][0]["transaction_type"], "OUT")
+
+    def test_reports_export_csv_uses_current_filters(self):
+        self.client.post(
+            "/api/stock-documents/",
+            {
+                "transaction_type": "IN",
+                "supplier": self.supplier.id,
+                "lines": [{"product": self.product.id, "quantity": 5}],
+            },
+            format="json",
+        )
+
+        response = self.client.get("/api/reports/export/?transaction_type=IN")
+        content = response.content.decode("utf-8-sig")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response["Content-Type"].startswith("text/csv"))
+        self.assertIn("Mã phiếu", content)
+        self.assertIn("KEY-001", content)
 
     def test_stock_document_api_requires_authentication(self):
         self.client.force_authenticate(user=None)
