@@ -4,6 +4,7 @@ import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import ProductFormPage from './pages/ProductFormPage'
 import ProductListPage from './pages/ProductListPage'
+import ReportsPage from './pages/ReportsPage'
 import StockDocumentFormPage from './pages/StockDocumentFormPage'
 import StockHistoryDetailPage from './pages/StockHistoryDetailPage'
 import StockHistoryPage from './pages/StockHistoryPage'
@@ -34,6 +35,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/reports" element={<ReportsPage />} />
         <Route path="/products" element={<ProductListPage />} />
         <Route path="/products/new" element={<ProductFormPage />} />
         <Route path="/products/:id/edit" element={<ProductFormPage />} />
