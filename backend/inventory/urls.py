@@ -6,6 +6,8 @@ from .views import (
     StockDocumentViewSet,
     SupplierViewSet,
     dashboard_summary,
+    reports_export_csv,
+    reports_summary,
 )
 
 router = DefaultRouter()
@@ -16,5 +18,7 @@ router.register(r'stock-documents', StockDocumentViewSet, basename='stock-docume
 
 urlpatterns = [
     path('dashboard/', dashboard_summary, name='dashboard-summary'),
+    path('reports/', reports_summary, name='reports-summary'),
+    path('reports/export/', reports_export_csv, name='reports-export-csv'),
     path('', include(router.urls)),
 ]

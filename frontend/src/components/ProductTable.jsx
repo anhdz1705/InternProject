@@ -49,7 +49,7 @@ function ProductTable({ products, onDelete, currentPage = 1, pageSize = 10 }) {
       <table className="product-data-grid">
         <thead>
           <tr>
-            <th className="product-col-index">#</th>
+            <th className="product-col-index">STT</th>
             <th>Tên sản phẩm</th>
             <th>SKU</th>
             <th>Danh mục</th>

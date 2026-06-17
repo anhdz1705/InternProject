@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 const icons = {
   dashboard: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
+  reports: <><path d="M4 19V5" /><path d="M4 19h16" /><rect x="7" y="11" width="3" height="5" rx="1" /><rect x="12" y="8" width="3" height="8" rx="1" /><rect x="17" y="5" width="3" height="11" rx="1" /></>,
   products: <><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" /><path d="m4.5 7.8 7.5 4.3 7.5-4.3M12 12.1V21" /></>,
   stockIn: <><path d="M12 3v12m0 0 4-4m-4 4-4-4" /><path d="M4 17v3h16v-3" /></>,
   stockOut: <><path d="M12 21V9m0 0 4 4m-4-4-4 4" /><path d="M4 7V4h16v3" /></>,
@@ -22,6 +23,7 @@ function Icon({ name }) {
 
 const navigation = [
   { to: '/dashboard', label: 'Tổng quan', icon: 'dashboard' },
+  { to: '/reports', label: 'Báo cáo', icon: 'reports' },
   { to: '/products', label: 'Sản phẩm', icon: 'products' },
   { to: '/stock-in', label: 'Nhập kho', icon: 'stockIn' },
   { to: '/stock-out', label: 'Xuất kho', icon: 'stockOut' },
@@ -75,7 +77,7 @@ function Sidebar() {
       <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>
         <Link className="sidebar__brand" to="/dashboard" onClick={() => setIsOpen(false)}>
           <span className="brand-mark">EZ</span>
-          <span>EZ Inventory<small>Warehouse system</small></span>
+          <span>EZ Inventory<small>Quản lý kho tinh gọn</small></span>
         </Link>
 
         <div className="sidebar__section">
@@ -92,8 +94,8 @@ function Sidebar() {
 
         <div className="sidebar__footer">
           <div className="sidebar__user">
-            <span>WA</span>
-            <div><strong>Warehouse Admin</strong><small>Đang hoạt động</small></div>
+            <span>QTV</span>
+            <div><strong>Quản trị viên</strong><small>Đang hoạt động</small></div>
           </div>
           <button type="button" onClick={requestLogout}>
             <Icon name="logout" />
