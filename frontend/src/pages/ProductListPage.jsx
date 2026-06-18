@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { getCategories } from '../api/categoryApi'
 import { deleteProduct, getProducts } from '../api/productApi'
 import { getSuppliers } from '../api/supplierApi'
 import Pagination from '../components/Pagination'
+import ProductCreateModal from '../components/ProductCreateModal'
 import ProductTable from '../components/ProductTable'
 
 const units = ['piece', 'box', 'kg', 'liter', 'pack']
@@ -23,6 +23,7 @@ function ProductListPage() {
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [filters, setFilters] = useState({
     search: '',
     category: '',
@@ -95,6 +96,16 @@ function ProductListPage() {
 
   const hasFilters = filters.search || filters.category || filters.supplier || filters.unit
 
+  const handleProductCreated = async () => {
+    setIsCreateModalOpen(false)
+
+    if (filters.page === 1) {
+      await loadProducts()
+    } else {
+      setFilters((current) => ({ ...current, page: 1 }))
+    }
+  }
+
   return (
     <main className="page product-management-page">
       <div className="wms-breadcrumb">
@@ -106,9 +117,13 @@ function ProductListPage() {
           <h1>Sản phẩm</h1>
           <p>Quản lý danh mục hàng hóa và theo dõi trạng thái tồn kho.</p>
         </div>
-        <Link className="button-link product-add-button" to="/products/new">
+        <button
+          className="button-link product-add-button"
+          type="button"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
           <span>+</span> Thêm sản phẩm
-        </Link>
+        </button>
       </div>
 
       <section className="product-toolbar" aria-label="Bộ lọc sản phẩm">
@@ -211,6 +226,15 @@ function ProductListPage() {
           onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
         />
       </section>
+
+      {isCreateModalOpen && (
+        <ProductCreateModal
+          categories={categories}
+          suppliers={suppliers}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={handleProductCreated}
+        />
+      )}
     </main>
   )
 }
