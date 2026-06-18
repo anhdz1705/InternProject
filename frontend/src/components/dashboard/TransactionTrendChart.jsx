@@ -44,7 +44,7 @@ function TransactionTrendChart({ trendData }) {
           boxHeight: 8,
           boxWidth: 8,
           color: '#475569',
-          font: { size: 11, weight: 600 },
+          font: { size: 10, weight: 500 },
           usePointStyle: true,
         },
       },
@@ -61,7 +61,7 @@ function TransactionTrendChart({ trendData }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: '#64748b', font: { size: 11, weight: 600 } },
+        ticks: { color: '#64748b', font: { size: 10, weight: 500 } },
       },
       y: {
         beginAtZero: true,
@@ -69,6 +69,7 @@ function TransactionTrendChart({ trendData }) {
         grid: { color: '#e5e7eb' },
         ticks: {
           color: '#94a3b8',
+          font: { size: 10, weight: 500 },
           precision: 0,
           callback: (value) => formatNumber(value),
         },
