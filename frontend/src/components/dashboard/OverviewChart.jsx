@@ -39,7 +39,7 @@ function OverviewChart({ stats }) {
         grid: { display: false },
         ticks: {
           color: '#64748b',
-          font: { size: 11, weight: 600 },
+          font: { size: 10, weight: 500 },
           maxRotation: 0,
         },
       },
@@ -49,6 +49,7 @@ function OverviewChart({ stats }) {
         grid: { color: '#e5e7eb' },
         ticks: {
           color: '#94a3b8',
+          font: { size: 10, weight: 500 },
           precision: 0,
           callback: (value) => formatNumber(value),
         },

@@ -4,9 +4,8 @@ function DashboardHeader() {
   return (
     <div className="dashboard-hero">
       <div>
-        <span className="dashboard-badge">Trạng thái hôm nay</span>
         <h1>Tổng quan kho EZ Inventory</h1>
-        <p>Theo dõi tồn kho, cảnh báo bổ sung và nhịp nhập xuất hàng trong một màn hình vận hành.</p>
+        <p>Theo dõi tồn kho, cảnh báo bổ sung và xuất nhập hàng.</p>
       </div>
 
       <div className="dashboard-hero__actions">
